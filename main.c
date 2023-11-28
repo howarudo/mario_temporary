@@ -99,6 +99,18 @@ void Init(){
     DrawScreen();
 }
 
+bool IntersectCourse(VEC2 _v) {
+    int x = (int)_v.x;
+    int y = (int)_v.y;
+    switch(course[y][x]){
+        case'b':
+        case'p':
+        case'q':
+            return ture;
+    }
+    return false;
+}
+
 int main() {
 /*
     //OSによる分岐
@@ -127,6 +139,39 @@ int main() {
     clock_t lastDrawClock = clock();
     while(1){
         clock_t nowClock = clock();
+            VEC2 left = {
+                player.position.x,
+                player.position.y + 0.5ff
+            };
+            if (IntersectCourse(keft)) {
+                player.position.x = floorf(player.position.x) + 1.0f;
+                player.velocity.x = 0;
+            };
+            VEC2 right = {
+                player.position.x + 1.0f,
+                player.position.y + 0.5ff
+            };
+            if (IntersectCourse(right)) {
+                player.position.x = floorf(player.position.x);
+                player.velocity.x = 0;
+            };
+            VEC2 down = {
+                player.position.x + 0.5f,
+                player.position.y + 1.0f
+            };
+            if(IntersectCourse(down)) {
+                player.position.y = floorf(player.position.y);
+                player.velocity.y = 0;
+            };
+            VEC2 up = {
+                player.position.x + 0.5f,
+                player.position.y
+            };
+            if(IntersectCourse(up)) {
+                player.position.y = floorf(player.position.y) + 1.0f;
+                player.velocity.y = 0;
+            };
+
         if(nowClock >= lastUpdateClock + UPDATE_INTERVAL){
             lastUpdateClock = nowClock;
         }
