@@ -26,6 +26,7 @@ typedef struct {
 typedef struct {
     VEC2 position;
     VEC2 velocity;
+    bool isJumping; // プレイヤーがジャンプ中かどうかを追跡する変数　マリオがジャンプするロジックを作るときにこのフラグ管理が必要
 }PLAYER;
 
 char course[COURSE_HEIGHT][COURSE_WIDTH] = {
@@ -104,6 +105,10 @@ bool IntersectCourse(VEC2 _v) {
     int y = (int)_v.y;
     switch(course[y][x]){
         case'b':
+            if (player.isJumping && player.velocity.y > 0) {) {
+                course[y][x] = ' '; // ブロックを空白に変更
+                //return false; // 衝突せず、通過させる
+            }
         case'p':
         case'q':
             return ture;
