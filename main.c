@@ -66,7 +66,7 @@ char course[COURSE_HEIGHT][COURSE_WIDTH] = {
 
 char screen[SCREEN_HEIGHT][SCREEN_WIDTH];
 
-char aa[256][4 + 1];
+char aa[256][2 + 1];
 
 PLAYER player;
 
@@ -81,8 +81,8 @@ void ClearScreen() {
 }
 
 void DrawScreen() {
-    for (int y = 0; y < SCREEN_HEIGHT; ++y){
-        for (int x = 0; x < SCREEN_WIDTH; ++x){
+    for (int y = 0; y < SCREEN_HEIGHT; y++){
+        for (int x = 0; x < SCREEN_WIDTH; x++){
             screen[y][x] = course[y][x];
         }
     }
@@ -123,17 +123,17 @@ int main() {
 #endif
 */
     //ここからがゲームのコード
-    snprintf(aa[0], sizeof(aa[0]), "x");
-    snprintf(aa[' '], sizeof(aa[' ']), " ");
-    snprintf(aa['b'], sizeof(aa['b']), "■");
-    snprintf(aa['p'], sizeof(aa['p']), "□");
-    snprintf(aa['q'], sizeof(aa['q']), "？");
-    snprintf(aa['m'], sizeof(aa['m']), "^");
-    snprintf(aa['t'], sizeof(aa['t']), "Y");
-    snprintf(aa['c'], sizeof(aa['c']), "~");
-    snprintf(aa['g'], sizeof(aa['g']), "|");
-    snprintf(aa['f'], sizeof(aa['f']), "●");
-    snprintf(aa['@'], sizeof(aa['@']), "★");
+    sprintf(aa[0], sizeof(aa[0]), "x");
+    sprintf(aa[' '], sizeof(aa[' ']), " ");
+    sprintf(aa['b'], sizeof(aa['b']), "■");
+    sprintf(aa['p'], sizeof(aa['p']), "□");
+    sprintf(aa['q'], sizeof(aa['q']), "？");
+    sprintf(aa['m'], sizeof(aa['m']), "^");
+    sprintf(aa['t'], sizeof(aa['t']), "Y");
+    sprintf(aa['c'], sizeof(aa['c']), "~");
+    sprintf(aa['g'], sizeof(aa['g']), "|");
+    sprintf(aa['f'], sizeof(aa['f']), "●");
+    sprintf(aa['@'], sizeof(aa['@']), "★");
 
     Init();
 
