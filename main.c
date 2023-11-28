@@ -1,9 +1,10 @@
 #include <stdio.h>
-#include<curses.h>
+#include <curses.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include <ncurses.h>//標準ライブラリではないから、環境依存の可能性あり
 
 
 #define COURSE_WIDTH    (256)
@@ -48,7 +49,7 @@ char course[COURSE_HEIGHT][COURSE_WIDTH] = {
 
 char screen[SCREEN_HEIGHT][SCREEN_WIDTH];
 
-char aa[256][2 + 1];
+char aa[256][4 + 1];
 
 PLAYER player;
 
@@ -139,12 +140,13 @@ int main() {
             //     }
             DrawScreen();
         }
-
-        if (kbhit()) {
+        /*
+        if (kbhit()) {//kbhitはconio.h内の関数
             switch(getch()) {
                 printf("hello");
             }
         }
+        */
     }
 
     return 0;
