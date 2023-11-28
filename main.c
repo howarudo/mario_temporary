@@ -1,8 +1,55 @@
 #include <stdio.h>
+#include<curses.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <math.h>
 
+int mygetch() {
+    char ch;
+    int error;
+    static struct termios Otty, Ntty;
+
+    fflush(stdout);
+    tcgetattr(0, &Otty);
+    Ntty = Otty;
+
+    Ntty.c_iflag  =  0;     /* input mode       */
+    Ntty.c_oflag  =  0;     /* output mode      */
+    Ntty.c_lflag &= ~ICANON;    /* line settings    */
+
+#if 1
+    /* disable echoing the char as it is typed */
+    Ntty.c_lflag &= ~ECHO;  /* disable echo     */
+#else
+    /* enable echoing the char as it is typed */
+    Ntty.c_lflag |=  ECHO;  /* enable echo      */
+#endif
+
+    Ntty.c_cc[VMIN]  = CMIN;    /* minimum chars to wait for */
+    Ntty.c_cc[VTIME] = CTIME;   /* minimum wait time    */
+
+#if 1
+    /*
+    * use this to flush the input buffer before blocking for new input
+    */
+    #define FLAG TCSAFLUSH
+#else
+    /*
+    * use this to return a char from the current input buffer, or block if
+    * no input is waiting.
+    */
+    #define FLAG TCSANOW
+
+#endif
+
+    if ((error = tcsetattr(0, FLAG, &Ntty)) == 0) {
+        error  = read(0, &ch, 1 );        /* get char from stdin */
+        error += tcsetattr(0, FLAG, &Otty);   /* restore old settings */
+    }
+
+    return (error == 1 ? (int) ch : -1 );
+}
 /*
 #ifdef _WIN32
     #include <conio.h>
@@ -70,6 +117,8 @@ char aa[256][2 + 1];
 
 PLAYER player;
 
+bool keyPressed[256];
+
 void ClearScreen() {
     #ifdef _WIN32
     // Windows用のコマンド
@@ -110,6 +159,7 @@ void DrawScreen() {
 void Init(){
     player.position.x = SCREEN_WIDTH / 2;
     player.position.y = 13;
+    memset(keyPressed, 0, sizeof keyPressed);
     DrawScreen();
 }
 
@@ -123,17 +173,17 @@ int main() {
 #endif
 */
     //ここからがゲームのコード
-    sprintf(aa[0], sizeof(aa[0]), "x");
-    sprintf(aa[' '], sizeof(aa[' ']), " ");
-    sprintf(aa['b'], sizeof(aa['b']), "■");
-    sprintf(aa['p'], sizeof(aa['p']), "□");
-    sprintf(aa['q'], sizeof(aa['q']), "？");
-    sprintf(aa['m'], sizeof(aa['m']), "^");
-    sprintf(aa['t'], sizeof(aa['t']), "Y");
-    sprintf(aa['c'], sizeof(aa['c']), "~");
-    sprintf(aa['g'], sizeof(aa['g']), "|");
-    sprintf(aa['f'], sizeof(aa['f']), "●");
-    sprintf(aa['@'], sizeof(aa['@']), "★");
+    snprintf(aa[0], sizeof(aa[0]), "x");
+    snprintf(aa[' '], sizeof(aa[' ']), " ");
+    snprintf(aa['b'], sizeof(aa['b']), "■");
+    snprintf(aa['p'], sizeof(aa['p']), "□");
+    snprintf(aa['q'], sizeof(aa['q']), "？");
+    snprintf(aa['m'], sizeof(aa['m']), "^");
+    snprintf(aa['t'], sizeof(aa['t']), "Y");
+    snprintf(aa['c'], sizeof(aa['c']), "~");
+    snprintf(aa['g'], sizeof(aa['g']), "|");
+    snprintf(aa['f'], sizeof(aa['f']), "田");
+    snprintf(aa['@'], sizeof(aa['@']), "★");
 
     Init();
 
@@ -145,27 +195,22 @@ int main() {
             lastUpdateClock = nowClock;
         }
 
-        /*
         if(nowClock >= lastDrawClock + DRAW_INTERVAL){
             lastDrawClock = nowClock;
 
-            player.position.x += 1;
-            DrawScreen();
-        }
-        */
-
-        if(nowClock >= lastDrawClock + DRAW_INTERVAL){
-            lastDrawClock = nowClock;
-
-            player.position.x += 1;
-            if (player.position.x >= SCREEN_WIDTH) {
-                player.position.x = 0;
-                }
+            // player.position.x += 1;
+            // if (player.position.x >= SCREEN_WIDTH) {
+            //     player.position.x = 0;
+            //     }
             DrawScreen();
         }
 
+        if (kbhit()) {
+            switch(getch()) {
+                printf("hello");
+            }
+        }
     }
-
 
     return 0;
 
